@@ -1,4 +1,4 @@
-From 810bb8bd664a0c6729d2f4f0ff4087d8a0c13edb Mon Sep 17 00:00:00 2001
+From 52d0d7a794c87ecbac1992b2456e7178b8ea65a6 Mon Sep 17 00:00:00 2001
 From: Johannes Hund <johannes@ecog.io>
 Date: Sat, 14 Nov 2026 18:15:35 +0100
 Subject: [PATCH] touchpad: add AttrTapMoveThreshold quirk
@@ -15,7 +15,8 @@ the default. Behaviour without the quirk is unchanged.
  src/evdev-mt-touchpad.h     | 3 +++
  src/quirks.c                | 9 +++++++++
  src/quirks.h                | 1 +
- 5 files changed, 25 insertions(+), 1 deletion(-)
+ tools/shared.c              | 1 +
+ 6 files changed, 26 insertions(+), 1 deletion(-)
 
 diff --git a/doc/user/device-quirks.rst b/doc/user/device-quirks.rst
 index e0959a2..ba7a46d 100644
@@ -112,6 +113,18 @@ index 25bb95e..2372c78 100644
  	QUIRK_ATTR_TABLET_SMOOTHING,
  	QUIRK_ATTR_THUMB_PRESSURE_THRESHOLD,
  	QUIRK_ATTR_THUMB_SIZE_THRESHOLD,
+diff --git a/tools/shared.c b/tools/shared.c
+index f75d21c..04ba597 100644
+--- a/tools/shared.c
++++ b/tools/shared.c
+@@ -1031,6 +1031,7 @@ tools_list_device_quirks(struct quirks_context *ctx,
+ 				callback(userdata, buf);
+ 				break;
+ 			case QUIRK_ATTR_TRACKPOINT_MULTIPLIER:
++			case QUIRK_ATTR_TAP_MOVE_THRESHOLD:
+ 				quirks_get_double(quirks, q, &d);
+ 				snprintf(buf, sizeof(buf), "%s=%0.2f", name, d);
+ 				callback(userdata, buf);
 -- 
 2.56.1
 
