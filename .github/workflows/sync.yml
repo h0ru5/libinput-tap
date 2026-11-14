@@ -1,0 +1,21 @@
+name: sync-with-arch
+on:
+  schedule: [{cron: '0 6 * * 1'}]
+  workflow_dispatch:
+permissions: {contents: write, pull-requests: write}
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Follow Arch libinput version
+        run: ./update.sh
+      - name: Open PR if bumped
+        env: {GH_TOKEN: '${{ github.token }}'}
+        run: |
+          git diff --quiet && exit 0
+          v=$(sed -n 's/^pkgver=//p' PKGBUILD)
+          git switch -c "bump-$v"
+          git -c user.name=ci -c user.email=ci@users.noreply.github.com commit -am "libinput $v"
+          git push -f origin "bump-$v"
+          gh pr create --title "libinput $v" --body "Auto bump to follow Arch. Patch applies cleanly." || true
